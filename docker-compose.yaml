@@ -1,0 +1,23 @@
+version: "1.0"
+
+services:
+  mongo:
+    image: docker.io/library/mongo:latest
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: passwd
+    restart: always
+  api:
+    build: .
+    depends_on:
+      - mongo
+    environment:
+      MongoURI: mongodb://root:passwd@mongo:27017/
+      SECRET_KEY: "123123"
+    ports:
+      - 4000:4000
+    restart: always
+volumes:
+  mongodb_data:
